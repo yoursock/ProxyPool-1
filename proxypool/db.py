@@ -28,7 +28,7 @@ class RedisClient(object):
             return
         if not self.db.zscore(REDIS_KEY, proxy):
             # return self.db.zadd(REDIS_KEY, score, proxy)
-            return self.db.zadd(REDIS_KEY, {proxy: score}, proxy)  # redis版本更新后，zadd方法的第二个参数是字典
+            return self.db.zadd(REDIS_KEY, {proxy: score})  # redis版本更新后，zadd方法的第二个参数是字典
 
     def random(self):
         """
@@ -55,7 +55,9 @@ class RedisClient(object):
         score = self.db.zscore(REDIS_KEY, proxy)
         if score and score > MIN_SCORE:
             print('代理', proxy, '当前分数', score, '减1')
-            return self.db.zincrby(REDIS_KEY, proxy, -1)
+            return self.db.zincrby(name=REDIS_KEY, value=proxy, amount=-1)
+            # score = self.db.zscore(REDIS_KEY, proxy)
+            # print('代理', proxy, '当前分数', score, )
             # return self.db.zincrby(REDIS_KEY, {proxy: score}, -1)
         else:
             print('代理', proxy, '当前分数', score, '移除')
@@ -77,7 +79,8 @@ class RedisClient(object):
         """
         print('代理', proxy, '可用，设置为', MAX_SCORE)
         # return self.db.zadd(REDIS_KEY, MAX_SCORE, proxy)
-        return self.db.zadd(REDIS_KEY, {proxy: MAX_SCORE}, proxy)
+        # return self.db.zadd(REDIS_KEY, {proxy: MAX_SCORE}, proxy)
+        return self.db.zadd(REDIS_KEY, {proxy: MAX_SCORE}, )
 
     def count(self):
         """
