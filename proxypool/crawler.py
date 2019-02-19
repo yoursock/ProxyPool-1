@@ -142,3 +142,14 @@ class Crawler(object, metaclass=ProxyMetaclass):
             for address, port in re_ip_address:
                 result = address + ':' + port
                 yield result.replace(' ', '')
+
+    def crawl_feiyiproxy(self):
+        url = 'http://www.feiyiproxy.com/?page_id=1457'
+        print('Crawling', url)
+        html = get_page(url)
+        if html:
+            ip_address = re.compile('<tr>\s*<td>(.*?)</td>\s*<td>(.*?)</td>')
+            re_ip_address = ip_address.findall(html)
+            for address, port in re_ip_address:
+                result = address + ':' + port
+                yield result.replace(' ', '')
